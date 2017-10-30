@@ -6,15 +6,15 @@ require 'Interface'
 
 
 
-lambda load
+loading = lambda {
 openScreen = Screen.new
 setupScreen = Screen.new
-
-end
-
+}
 
 
-loadScreen = Screen.new
+
+
+loadScreen = Screen.new ([Label.new("Loading",XY.new(100,100))])
 loadScreen.show
-load
+loading.call
 openScreen.show

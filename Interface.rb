@@ -4,13 +4,17 @@ require 'gosu'
 
 class Screen < Gosu::Window
 
-  def initialize (labels = [], buttons = [], worldspace = nil)
+  def initialize (labels = [], buttons = [], worldspace = nil, background = nil)
     super 640,480
-      @labels, @buttons, @worldspace = labels, buttons, worldspace
+      @labels, @buttons, @worldspace, @background = labels, buttons, worldspace, background
   end
 
   def draw
-    @worldspace.draw if @worldspace
+    if @worldspace
+       @worldspace.draw
+     elsif @background
+       @background.draw 0, 0, 0
+     end
     @buttons.each {|button| button.draw}
     @labels.each {|label| label.draw}
   end
