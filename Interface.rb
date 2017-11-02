@@ -2,11 +2,36 @@ require 'rubygems'
 require 'gosu'
 
 
-class Screen < Gosu::Window
+class MyWindow < Gosu::Window
+def initialize
+
+super 640,480
+end
+def draw
+  @screen.draw
+end
+
+def update
+  @screen.update
+end
+
+def button_down(id)
+  if id == Gosu::MS_LEFT || id == Gosu::MS_RIGHT
+    @screen.mouse_click(id, mouse_x, mouse_y)
+  else
+    @screen.button_down(id)
+  end
+end
+
+def setScreen screen
+  @screen = screen
+end
+end
+
+class Screen
 
   def initialize (labels = [], buttons = [], worldspace = nil, background = nil)
-    super 640,480
-      @labels, @buttons, @worldspace, @background = labels, buttons, worldspace, background
+    @labels, @buttons, @worldspace, @background = labels, buttons, worldspace, background
   end
 
   def draw
@@ -24,15 +49,15 @@ class Screen < Gosu::Window
   end
 
   def button_down(id)
+
+  end
+
+  def mouse_click(id, mouse_x, mouse_y)
     if id == Gosu::MS_LEFT
       if (((@buttons.map {|button| button.click(mouse_x, mouse_y) }).sum) == 0) then (@worldspace.click(mouse_x, mouse_y) if @worldspace) end
     end
   end
-
-
-
 end
-
 class Label
 
   def initialize (text, position)
@@ -92,10 +117,19 @@ def basicTest
   testlambda = lambda {
     puts "I do nothing"
   }
-
-  buttons = [Button.new("my button", XY.new(30,50),XY.new(100,30)) do puts "I do nothing" end,Button.new("my other button", XY.new(30,90),XY.new(150,30))]
+  myWindow = MyWindow.new
+  labels = [Label.new("my Label", XY.new(50,70))]
+  mySecondScreen = Screen.new(labels)
+  buttons = [Button.new("my button", XY.new(30,50),XY.new(100,30)) do puts "I do nothing" end,Button.new("my other button", XY.new(30,90),XY.new(150,30)) do myWindow.setScreen(mySecondScreen) end]
   myScreen = Screen.new([],buttons)
-  myScreen.show
+  
+
+
+  myWindow.setScreen myScreen
+  myWindow.show
+#sleep 5
+
+#  myWindow.setScreen mySecondScreen
 end
 
 basicTest
