@@ -1,6 +1,7 @@
 require 'Assets'
 require 'Worldspace'
 require 'Interface'
+require 'Player'
 
 
 
@@ -15,6 +16,6 @@ setupScreen = Screen.new
 
 
 loadScreen = Screen.new ([Label.new("Loading",XY.new(100,100))])
-loadScreen.show
+rtsMainWindow = new MyWindow (loadScreen)
 loading.call
-openScreen.show
+rtsMainWindow.setScreen openScreen

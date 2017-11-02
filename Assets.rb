@@ -1,6 +1,8 @@
+require 'Interface'
 class Asset
 
 public
+attr_reader :model, :position
 def loadFromFile
  #TODO
 end

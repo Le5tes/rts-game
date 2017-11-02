@@ -122,7 +122,7 @@ def basicTest
   mySecondScreen = Screen.new(labels)
   buttons = [Button.new("my button", XY.new(30,50),XY.new(100,30)) do puts "I do nothing" end,Button.new("my other button", XY.new(30,90),XY.new(150,30)) do myWindow.setScreen(mySecondScreen) end]
   myScreen = Screen.new([],buttons)
-  
+
 
 
   myWindow.setScreen myScreen
@@ -131,5 +131,3 @@ def basicTest
 
 #  myWindow.setScreen mySecondScreen
 end
-
-basicTest
