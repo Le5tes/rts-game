@@ -137,7 +137,7 @@ def worldspaceTest
     img = Gosu::Image.new("imgs/Tile1.png")
     map = Array.new(10) {|x| x = Array.new(10) {|x| x = Tile.new(img,1)} }
     #puts map.to_s
-    myScreen = Screen.new([],[], WorldSpace.new([],map,XY.new(0,200)))
+    myScreen = Screen.new([],[], WorldSpace.new({},map,XY.new(0,200)))
     myWindow.setScreen myScreen
     myWindow.show
 end
