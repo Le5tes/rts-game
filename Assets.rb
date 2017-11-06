@@ -1,4 +1,5 @@
-require 'Interface'
+require_relative 'XY'
+
 class Asset
 
 public
@@ -10,6 +11,11 @@ end
 def command( type, target)
  #TODO
 end
+
+def tile
+  @position
+end
+
 
 private
 @position
@@ -23,8 +29,17 @@ end
 
 class Unit < Asset
 
+def tile
+ @tile
+end
+
+def move
+#TODO
+end
+
 private
 @speed
+@tile
 
 end
 

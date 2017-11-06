@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'gosu'
+require_relative 'Worldspace'
+require_relative 'XY'
 
 
 class MyWindow < Gosu::Window
@@ -34,6 +36,9 @@ class Screen
     @labels, @buttons, @worldspace, @background = labels, buttons, worldspace, background
   end
 
+  def loadFromFile (file)
+ #TODO
+  end
   def draw
     if @worldspace
        @worldspace.draw
@@ -102,12 +107,7 @@ class Button
 
 end
 
-class XY
-  attr_accessor :x , :y
-  def initialize (x,y)
-    @x, @y = x, y
-  end
-end
+
 
 ######TESTING#####
 
@@ -131,3 +131,15 @@ def basicTest
 
 #  myWindow.setScreen mySecondScreen
 end
+
+def worldspaceTest
+    myWindow = MyWindow.new
+    img = Gosu::Image.new("imgs/Tile1.png")
+    map = Array.new(10) {|x| x = Array.new(10) {|x| x = Tile.new(img,1)} }
+    #puts map.to_s
+    myScreen = Screen.new([],[], WorldSpace.new([],map,XY.new(0,200)))
+    myWindow.setScreen myScreen
+    myWindow.show
+end
+
+worldspaceTest

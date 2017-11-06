@@ -1,7 +1,5 @@
-require 'Assets'
-require 'Worldspace'
-require 'Interface'
-require 'Player'
+require_relative 'Interface'
+
 
 
 
