@@ -38,8 +38,14 @@ class WorldSpace
     #TODO
   end
 
-  def get_asset_from_pos(x,y) #well this is a horrific method! Needs refactoring- some of it into model??
-    players.map{|key, player| [key, player.assets.map {|key,asset| isometric(asset.position.x, asset.position.y) {|x1,y1,z| ((x1-asset.model.origin.x) < x && x < (x1 - asset.model.origin.x + asset.model.size.x) && (y1-asset.model.origin.y) < y && y < (y1 - asset.model.origin.y + asset.model.size.y)) ? [key,z] : nil  } }.compact].flatten}.sort {|x,y| y[2] <=> x[2] }.first
+#Returns an array containing a playerkey, an assetkey and a z value for an asset, from a mouseclick.
+#Returns the asset with the highest z value if multiple on top of each other.
+  def get_asset_from_pos(x,y)
+    players.map{|key, player| [key, player.assets.map {|key,asset|
+      isometric(asset.position.x, asset.position.y) {|x1,y1,z|
+         asset.model.within_drawn?(x, y, x1, y1) ? [key,z] : nil
+         }
+       }.compact].flatten}.sort {|x,y| y[2] <=> x[2] }.first
   end
 
 
