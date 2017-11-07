@@ -26,8 +26,22 @@ class WorldSpace
   end
 
   def click (x,y)
+
+    puts (get_asset_from_pos(x,y))
+    #1st click, return a player key and asset key
+    #2nd click return either another player key and asset key or a tile
+    #then provide that as a command for the original asset
     #TODO
   end
+
+  def command asset_key, target
+    #TODO
+  end
+
+  def get_asset_from_pos(x,y) #well this is a horrific method! Needs refactoring- some of it into model??
+    players.map{|key, player| [key, player.assets.map {|key,asset| isometric(asset.position.x, asset.position.y) {|x1,y1,z| ((x1-asset.model.origin.x) < x && x < (x1 - asset.model.origin.x + asset.model.size.x) && (y1-asset.model.origin.y) < y && y < (y1 - asset.model.origin.y + asset.model.size.y)) ? [key,z] : nil  } }.compact].flatten}.sort {|x,y| y[2] <=> x[2] }.first
+  end
+
 
   def isometric(x,y) #xy co-ordinates to isometric
     newx = @origin.x + x*tilesize.x + y*tilesize.x
@@ -40,7 +54,7 @@ class WorldSpace
     @map.each.with_index {|row, yi| row.each.with_index {|tile, xi|
       isometric(xi,yi) {|x,y,z|tile.image.draw(x,y,0)}
       }}
-    @players.each {|key,player| player.assets.each {|asset|
+    @players.each {|key,player| player.assets.each {|key,asset|
       isometric(asset.position.x, asset.position.y) {|x,y,z| asset.model.draw(x,y,z, player.colour)}
       }}
   end

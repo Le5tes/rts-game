@@ -50,7 +50,7 @@ class Screen
   end
 
   def update
-    @worldspace.update if @worldspace
+    @worldspace.update if @worldspace  ##worldspace should have it's own update schedule I think, this may turn to viewport.update?
   end
 
   def button_down(id)
