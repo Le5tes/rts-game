@@ -36,8 +36,8 @@ def worldspaceTest
     tankimg = Gosu::Image.new("imgs/tank1.png")
     map = Array.new(10) {|x| x = Array.new(10) {|x| x = Tile.new(img,1)} }
     tank = Unit.new(XY.new(3,2),  Model.new([tankimg],XY.new(0,0)))
-
-    player = Player.new([tank])
+    tank2 = Unit.new(XY.new(3,3),  Model.new([tankimg],XY.new(0,0)))
+    player = Player.new([tank, tank2])
     #puts map.to_s
     myScreen = Screen.new([],[], WorldSpace.new({testplayer: player},map,XY.new(0,200)))
     myWindow.setScreen myScreen
