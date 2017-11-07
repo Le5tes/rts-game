@@ -38,7 +38,7 @@ class WorldSpace
     #TODO
   end
 
-#Returns an array containing a playerkey, an assetkey and a z value for an asset, from a mouseclick.
+#Returns an array containing a playerkey, an assetkey and a z value for an asset, from a pair of co-ordinates corresponding to a mouseclick.
 #Returns the asset with the highest z value if multiple on top of each other.
   def get_asset_from_pos(x,y)
     players.map{|key, player| [key, player.assets.map {|key,asset|

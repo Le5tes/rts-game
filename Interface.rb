@@ -28,6 +28,9 @@ end
 def setScreen screen
   @screen = screen
 end
+def needs_cursor?
+  true
+end
 end
 
 class Screen
