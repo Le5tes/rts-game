@@ -28,6 +28,7 @@ class WorldSpace
   def click (x,y)
 
     puts (get_asset_from_pos(x,y))
+    puts ""
     #1st click, return a player key and asset key
     #2nd click return either another player key and asset key or a tile
     #then provide that as a command for the original asset
@@ -45,7 +46,7 @@ class WorldSpace
       isometric(asset.position.x, asset.position.y) {|x1,y1,z|
          asset.model.within_drawn?(x, y, x1, y1) ? [key,z] : nil
          }
-       }.compact].flatten}.sort {|x,y| y[2] <=> x[2] }.first
+       }.compact.sort {|x,y| y[1] <=> x[1] }.first].flatten}.sort {|x,y| y[2] <=> x[2] }.first
   end
 
 
