@@ -1,3 +1,4 @@
+require_relative 'Assets'
 class Player
 attr_reader :assets
 def initialize (starting_assets)

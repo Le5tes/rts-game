@@ -4,11 +4,16 @@ class Asset
 
 public
 attr_reader :model, :position
+
+def initialize(position, model)
+  @position, @model = position, model
+end
+
 def loadFromFile
  #TODO
 end
 
-def command( type, target)
+def command(type, target)
  #TODO
 end
 
