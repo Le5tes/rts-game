@@ -29,16 +29,16 @@ class WorldSpace
   def isometric(x,y) #xy co-ordinates to isometric
     newx = @origin.x + x*tilesize.x + y*tilesize.x
     newy = @origin.y + x*tilesize.y - y*tilesize.y
-    XY.new(newx,newy)
+    zorder = x-y
+    yield(newx,newy,zorder)
   end
 
-  def draw #refactor into asset and tile classes? then isometric would have to be as well, or in a seperate space?
+  def draw #done some refactoring, any more to do? One day tiles will need z-order (for hills and the like) 
     @map.each.with_index {|row, yi| row.each.with_index {|tile, xi|
-      xy = isometric((xi),(yi))
-      tile.image.draw(xy.x,xy.y,0)
+      isometric(xi,yi) {|x,y,z|tile.image.draw(x,y,0)}
       }}
     @players.each {|key,player| player.assets.each {|asset|
-      asset.model.draw(isometric(asset.position.x, asset.position.y))
+      isometric(asset.position.x, asset.position.y) {|x,y,z| asset.model.draw(x,y,z)}
       }}
   end
 

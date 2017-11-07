@@ -8,10 +8,10 @@ def initialize (images, origin)
   @currentimg = @images[0]
 end
 
-def draw position
-  x = position.x-@origin.x
-  y = position.y-@origin.y
-  @currentimg.draw x, y, 0
+def draw x, y, z
+  x -=@origin.x
+  y -=@origin.y
+  @currentimg.draw x, y, z
 end
 
 end
