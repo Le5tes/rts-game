@@ -9,9 +9,7 @@ def initialize (images, origin)
 end
 
 def draw x, y, z
-  x -=@origin.x
-  y -=@origin.y
-  @currentimg.draw x, y, z
+  @currentimg.draw x - @origin.x, y - @origin.y, z
 end
 
 end
