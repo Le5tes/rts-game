@@ -3,6 +3,9 @@ require 'gosu'
 require_relative 'Player'
 require_relative 'Assets'
 require_relative 'XY'
+# at some point seperate all interface functions into a viewport class
+#thus all players in a multiplayer game will have their own viewport but only one worldspace entity will exist on the server
+#I think worldspace wouldn't even require gosu then? Don't quite understand how requireing works currently, will do some testing later, for now leave as is
 
 class WorldSpace
 
@@ -33,12 +36,12 @@ class WorldSpace
     yield(newx,newy,zorder)
   end
 
-  def draw #done some refactoring, any more to do? One day tiles will need z-order (for hills and the like) 
+  def draw #done some refactoring, any more to do? One day tiles will need z-order (for hills and the like)
     @map.each.with_index {|row, yi| row.each.with_index {|tile, xi|
       isometric(xi,yi) {|x,y,z|tile.image.draw(x,y,0)}
       }}
     @players.each {|key,player| player.assets.each {|asset|
-      isometric(asset.position.x, asset.position.y) {|x,y,z| asset.model.draw(x,y,z)}
+      isometric(asset.position.x, asset.position.y) {|x,y,z| asset.model.draw(x,y,z, player.colour)}
       }}
   end
 
