@@ -10,9 +10,9 @@ require_relative 'XY'
 class WorldSpace
 
   attr_reader :players, :tilesize
-  def initialize (players = {}, map = nil, origin = (XY.new(0,200)), tilesize = (XY.new(24,14)))
+  def initialize (players = {} , current_player = nil, map = nil, origin = (XY.new(0,200)), tilesize = (XY.new(24,14)))
 
-    @players, @map, @origin, @tilesize = players, map, origin, tilesize
+    @players, @currentplayer, @map, @origin, @tilesize = players, current_player, map, origin, tilesize
 
 
   end
@@ -27,15 +27,24 @@ class WorldSpace
 
   def click (x,y)
 
-    puts (get_asset_from_pos(x,y))
-    puts ""
-    #1st click, return a player key and asset key
-    #2nd click return either another player key and asset key or a tile
-    #then provide that as a command for the original asset
+    #puts (get_asset_from_pos(x,y))
+    #puts ""
+    if  !@currentcommand
+#1st click, return a player key and asset key
+      command_asset_keys = get_asset_from_pos(x,y)
+      @currentcommand = command_asset_keys[1] if (command_asset_keys[1] && command_asset_keys[0] == @currentplayer)
+    else
+      #2nd click return either another player key and asset key or a tile
+      #then provide that as a command for the original asset
+      target =  rev_isometric(x,y) {|x,y| XY.new(x,y)} unless (target = get_asset_from_pos(x,y))[1]
+      command @currentcommand, target
+      @currentcommand = nil
+    end
     #TODO
   end
 
   def command asset_key, target
+    puts "Command asset: #{asset_key.to_s}, target: #{(target.is_a? Array) ? target.to_s : target.x.to_s + "," + target.y.to_s }"
     #TODO
   end
 
@@ -49,12 +58,17 @@ class WorldSpace
        }.compact.sort {|x,y| y[1] <=> x[1] }.first].flatten}.sort {|x,y| y[2] <=> x[2] }.first
   end
 
-
-  def isometric(x,y) #xy co-ordinates to isometric
+  def isometric(x,y) #grid co-ordinates to isometric screen co-ordinates
     newx = @origin.x + x*tilesize.x + y*tilesize.x
     newy = @origin.y + x*tilesize.y - y*tilesize.y
     zorder = x-y
     yield(newx,newy,zorder)
+  end
+
+  def rev_isometric(x,y) #isometric screen co-ordinates to grid co-ordinates
+    newx = (((x - @origin.x).to_f/tilesize.x + (y - @origin.y).to_f/tilesize.y)/2).round - 1 #too lazy to work out why this was off by 1 so just subtracted 1...
+    newy = (((x - @origin.x).to_f/tilesize.x - (y - @origin.y).to_f/tilesize.y)/2).round     #also this should have worked with to_i rather than round...
+    yield(newx,newy)
   end
 
   def draw #done some refactoring, any more to do? One day tiles will need z-order (for hills and the like)

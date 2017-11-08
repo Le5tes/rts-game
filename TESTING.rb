@@ -39,7 +39,7 @@ def worldspaceTest
     tank2 = Unit.new(XY.new(3,3),  Model.new([tankimg],XY.new(0,0)))
     player = Player.new({tank1: tank, tank2: tank2}, 0xff_900000, 10000)
     #puts map.to_s
-    myScreen = Screen.new([],[], WorldSpace.new({testplayer: player},map,XY.new(0,200)))
+    myScreen = Screen.new([],[], WorldSpace.new({testplayer: player},:testplayer,map,XY.new(0,200)))
     myWindow.setScreen myScreen
     myWindow.show
 end
