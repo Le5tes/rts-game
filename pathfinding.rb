@@ -4,7 +4,7 @@ require_relative 'XY'
 def findpath (start, target, map, openlist = [], closedlist = [], g_value = 0) #Implements A* pathfinding algorithm
   closedlist << start
   return closedlist if closedlist[-1] == target
-  surrounding_tiles(start).select {|co_ord| (!closedlist.include? co_ord) && map[co_ord.x][co_ord.y] }.each{|co_ord|
+  surrounding_tiles(start).select {|co_ord| ( within_bounds?(co_ord, map) && (!closedlist.include? co_ord) && map[co_ord.x][co_ord.y]) }.each{|co_ord|
     g = calcg(g_value, start, co_ord)
     h = calch(co_ord,target)
     f = g + h
@@ -18,6 +18,9 @@ def findpath (start, target, map, openlist = [], closedlist = [], g_value = 0) #
    findpath(newstart, target,map,openlist,closedlist,newg)
 end
 
+def within_bounds? co_ords, map
+  co_ords.x >= 0 && co_ords.y >= 0 && co_ords.x < map.length && co_ords.y < map[0].length
+end
 def calcg (old_g,current, previous)
   old_g + (current.x-previous.x).abs + (current.y-previous.y).abs + 1
 end

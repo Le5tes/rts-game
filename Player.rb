@@ -17,7 +17,9 @@ def earn money
   @cash += money
 end
 
-
+def add_asset key, asset
+  @assets[key] = asset
+end
 #TODO create + destroy etc.
 
 end

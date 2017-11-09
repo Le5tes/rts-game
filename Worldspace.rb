@@ -9,7 +9,7 @@ require_relative 'XY'
 
 class WorldSpace
 
-  attr_reader :players, :tilesize
+  attr_reader :players, :tilesize, :map
   def initialize (players = {} , current_player = nil, map = nil, origin = (XY.new(0,200)), tilesize = (XY.new(24,14)))
 
     @players, @currentplayer, @map, @origin, @tilesize = players, current_player, map, origin, tilesize
@@ -18,7 +18,7 @@ class WorldSpace
   end
 
   def update
-    ##TODO
+    players.each {|key,player| player.assets.each{|key,asset| asset.move}}
   end
 
   def loadFromFile(file)
@@ -45,7 +45,7 @@ class WorldSpace
 
   def command asset_key, target
     puts "Command asset: #{asset_key.to_s}, target: #{(target.is_a? Array) ? target.to_s : target.x.to_s + "," + target.y.to_s }"
-    #TODO
+    @players[@currentplayer].assets[asset_key].command target
   end
 
 #Returns an array containing a playerkey, an assetkey and a z value for an asset, from a pair of co-ordinates corresponding to a mouseclick.
@@ -73,7 +73,7 @@ class WorldSpace
 
   def draw #done some refactoring, any more to do? One day tiles will need z-order (for hills and the like)
     @map.each.with_index {|row, yi| row.each.with_index {|tile, xi|
-      isometric(xi,yi) {|x,y,z|tile.image.draw(x,y,0)}
+      isometric(xi,yi) {|x,y,z|tile.image.draw(x,y,-1900)}
       }}
     @players.each {|key,player| player.assets.each {|key,asset|
       isometric(asset.position.x, asset.position.y) {|x,y,z| asset.model.draw(x,y,z, player.colour)}
