@@ -2,8 +2,8 @@ require_relative 'XY'
 #implements A* pathfinding on a 2d grid, allows diagonal movement where a straight move scores 2 and a diagonal scores 3
 
 def findpath (start, target, map, openlist = [], closedlist = [], g_value = 0) #Implements A* pathfinding algorithm
-  closedlist << start
-  return closedlist if closedlist[-1] == target
+  closedlist << [start, g_value]
+  return closedlist if closedlist[-1][0] == target
   surrounding_tiles(start).select {|co_ord| ( within_bounds?(co_ord, map) && (!closedlist.include? co_ord) && map[co_ord.x][co_ord.y]) }.each{|co_ord|
     g = calcg(g_value, start, co_ord)
     h = calch(co_ord,target)
@@ -67,4 +67,19 @@ def test (start, target, map)
    end
  }.join
 }
+end
+
+def are_adjacent? (a,b)
+  (a.x-b.x).abs <= 1 && (a.y-b.y).abs <= 1
+end
+
+def best_path (start, target, map)
+  v = findpath(start, target, map)
+  return v if v == false
+  path = [v.last]
+  v.pop
+  until are_adjacent? path.last[0], start
+    path << ((v.select {|x| are_adjacent? x[0], path.last[0]}).sort {|a,b| a[1]<=> b[1]}).first
+  end
+  path.map{|x| x[0]}
 end

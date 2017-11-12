@@ -61,7 +61,7 @@ def command (target)
       }
     }
     if target.is_a? XY then
-    @path =  findpath(@tile, target , map) .reverse
+    @path =  best_path(@tile, target , map)
     end
 
   #: @worldspace.players[target[0]][target[1]].tile  #the asset pointed to by 'target' if an asset
