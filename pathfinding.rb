@@ -35,6 +35,25 @@ def surrounding_tiles(xy)
   (Array.new(3) {|x| Array.new(3) {|y| XY.new(xy.x + x-1,xy.y + y-1)}}).flatten.reject {|value| value == xy}
 end
 
+def are_adjacent? (a,b)
+  (a.x-b.x).abs <= 1 && (a.y-b.y).abs <= 1
+end
+
+def best_path (start, target, map)
+  v = findpath(start, target, map)
+  return v if v == false
+  path = [v.last]
+  v.pop
+  until are_adjacent? path.last[0], start
+    path << ((v.select {|x| are_adjacent? x[0], path.last[0]}).sort {|a,b| a[1]<=> b[1]}).first
+  end
+  path.map{|x| x[0]}
+end
+
+
+########TESTING#######
+
+
 def test (start, target, map)
   map.each_with_index {|column,x| puts column.map.with_index {|value,y|
     if  x == start.x and y == start.y
@@ -67,19 +86,4 @@ def test (start, target, map)
    end
  }.join
 }
-end
-
-def are_adjacent? (a,b)
-  (a.x-b.x).abs <= 1 && (a.y-b.y).abs <= 1
-end
-
-def best_path (start, target, map)
-  v = findpath(start, target, map)
-  return v if v == false
-  path = [v.last]
-  v.pop
-  until are_adjacent? path.last[0], start
-    path << ((v.select {|x| are_adjacent? x[0], path.last[0]}).sort {|a,b| a[1]<=> b[1]}).first
-  end
-  path.map{|x| x[0]}
 end

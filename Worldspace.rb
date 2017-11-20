@@ -18,7 +18,7 @@ class WorldSpace
   end
 
   def update
-    players.each {|key,player| player.assets.each{|key,asset| asset.move}}
+    players.each {|key,player| player.assets.each{|key,asset| asset.update}}
   end
 
   def loadFromFile(file)
@@ -30,7 +30,7 @@ class WorldSpace
     #puts (get_asset_from_pos(x,y))
     #puts ""
     if  !@currentcommand
-#1st click, return a player key and asset key
+      #1st click, return a player key and asset key
       command_asset_keys = get_asset_from_pos(x,y)
       @currentcommand = command_asset_keys[1] if (command_asset_keys[1] && command_asset_keys[0] == @currentplayer)
     else

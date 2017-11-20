@@ -14,8 +14,12 @@ def loadFromFile
  #TODO
 end
 
-def command(type, target)
- #TODO
+def update
+
+end
+
+def command(target)
+  @target = @worldspace.players[target[0]].assets[target[1]] if target.is_a? Array
 end
 
 def tile
@@ -39,19 +43,41 @@ def tile
  @tile
 end
 
-def initialize (position, model, worldspace)
+def initialize (position, model, worldspace, speed)
   super(position, model, worldspace)
   @tile = position
+  @speed = speed
+  @position = @tile.to_floats
+end
+
+def update
+  move
 end
 
 def move
-if @path then
-  @position = @path.last
-  @tile = @position
-  @path.pop
-  @path = nil if @path.empty?
-end
-#TODO change move so that there are intermediate steps
+  if position.integer_co_ords?
+      @tile = @position.copy
+    if @path then #find next tile on path
+      p @path
+      @next_tile = @path.last.copy
+      @path.pop
+      @path = nil if @path.empty?
+
+    elsif @target && (pythagoras @target.tile, @tile ) > (weapon.range / 2)
+      @path = best_path(@tile, @target.tile, map)
+    end
+  else
+    p @position.x
+    p @position.y
+  end
+
+  if @next_tile && @next_tile != @tile
+    @position.x += ((@next_tile.x - @tile.x) * @speed / 100)
+    @position.y += ((@next_tile.y - @tile.y) * @speed / 100)
+    @position.x = @position.x.round(2)
+    @position.y = @position.y.round(2)
+  end
+ #TODO refactor
 end
 
 def command (target)
@@ -61,10 +87,12 @@ def command (target)
       }
     }
     if target.is_a? XY then
-    @path =  best_path(@tile, target , map)
+      @path =  best_path(@tile, target , map)
+
+    else
+      super
     end
 
-  #: @worldspace.players[target[0]][target[1]].tile  #the asset pointed to by 'target' if an asset
 
 end
 
@@ -82,7 +110,10 @@ class Building < Asset
 end
 
 class Weapon
+  attr_reader :range, :damage
+  def initialize
 
+  end
 
 end
 
