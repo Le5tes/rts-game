@@ -58,7 +58,6 @@ def move
   if position.integer_co_ords?
       @tile = @position.copy
     if @path then #find next tile on path
-      p @path
       @next_tile = @path.last.copy
       @path.pop
       @path = nil if @path.empty?
@@ -66,9 +65,6 @@ def move
     elsif @target && (pythagoras @target.tile, @tile ) > (weapon.range / 2)
       @path = best_path(@tile, @target.tile, map)
     end
-  else
-    p @position.x
-    p @position.y
   end
 
   if @next_tile && @next_tile != @tile
