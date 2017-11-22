@@ -32,11 +32,11 @@ class WorldSpace
     if  !@currentcommand
       #1st click, return a player key and asset key
       command_asset_keys = get_asset_from_pos(x,y)
-      @currentcommand = command_asset_keys[1] if (command_asset_keys[1] && command_asset_keys[0] == @currentplayer)
+      @currentcommand = command_asset_keys[1] if (command_asset_keys && command_asset_keys[0] == @currentplayer)
     else
       #2nd click return either another player key and asset key or a tile
       #then provide that as a command for the original asset
-      target =  rev_isometric(x,y) {|x,y| XY.new(x,y)} unless (target = get_asset_from_pos(x,y)) #[1]
+      target =  rev_isometric(x,y) {|x,y| XY.new(x,y)} unless (target = get_asset_from_pos(x,y))
       command @currentcommand, target
       @currentcommand = nil
     end

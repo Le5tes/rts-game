@@ -62,6 +62,8 @@ def move
       @path.pop
       @path = nil if @path.empty?
 
+    elsif @target.is_a? XY
+      @path =  best_path(@tile, @target , map)
     elsif @target && (pythagoras @target.tile, @tile ) > (weapon.range / 2)
       @path = best_path(@tile, @target.tile, map)
       puts "working-ish"
@@ -81,7 +83,7 @@ def command (target)
 
      
     if target.is_a? XY then
-      @path =  best_path(@tile, target , map)
+      @target =  target
 
     else
       super
