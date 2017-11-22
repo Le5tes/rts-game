@@ -6,7 +6,7 @@ class Asset
 public
 attr_reader :model, :position
 
-def initialize(position, model,worldspace)
+def initialize(position, model,worldspace, weapon = weapon.new
   @position, @model, @worldspace = position, model, worldspace
 end
 
