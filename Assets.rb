@@ -4,10 +4,10 @@ require_relative 'pathfinding'
 class Asset
 
 public
-attr_reader :model, :position
+attr_reader :model, :position, :weapon
 
-def initialize(position, model,worldspace, weapon = weapon.new
-  @position, @model, @worldspace = position, model, worldspace
+def initialize(position, model,worldspace, weapon = Weapon.new)
+  @position, @model, @worldspace, @weapon = position, model, worldspace, weapon
 end
 
 def loadFromFile
@@ -107,8 +107,8 @@ end
 
 class Weapon
   attr_reader :range, :damage
-  def initialize
-
+  def initialize range = 10
+    @range = range
   end
 
 end
