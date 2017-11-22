@@ -64,6 +64,7 @@ def move
 
     elsif @target && (pythagoras @target.tile, @tile ) > (weapon.range / 2)
       @path = best_path(@tile, @target.tile, map)
+      puts "working-ish"
     end
   end
 
@@ -78,10 +79,7 @@ end
 
 def command (target)
 
-    map = @worldspace.map.map{|row| row.map{|tile|
-      !tile.occupied
-      }
-    }
+     
     if target.is_a? XY then
       @path =  best_path(@tile, target , map)
 
@@ -95,7 +93,13 @@ end
 private
 @speed
 @tile
-
+ 
+ def map
+@worldspace.map.map{|row| row.map{|tile|
+      !tile.occupied
+      }
+    }
+ end
 end
 
 

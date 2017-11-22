@@ -36,7 +36,7 @@ class WorldSpace
     else
       #2nd click return either another player key and asset key or a tile
       #then provide that as a command for the original asset
-      target =  rev_isometric(x,y) {|x,y| XY.new(x,y)} unless (target = get_asset_from_pos(x,y))[1]
+      target =  rev_isometric(x,y) {|x,y| XY.new(x,y)} unless (target = get_asset_from_pos(x,y)) #[1]
       command @currentcommand, target
       @currentcommand = nil
     end
@@ -51,11 +51,12 @@ class WorldSpace
 #Returns an array containing a playerkey, an assetkey and a z value for an asset, from a pair of co-ordinates corresponding to a mouseclick.
 #Returns the asset with the highest z value if multiple on top of each other.
   def get_asset_from_pos(x,y)
-    players.map{|key, player| [key, player.assets.map {|key,asset|
+    a = players.map{|key, player| [key, player.assets.map {|key,asset|
       isometric(asset.position.x, asset.position.y) {|x1,y1,z|
          asset.model.within_drawn?(x, y, x1, y1) ? [key,z] : nil
          }
-       }.compact.sort {|x,y| y[1] <=> x[1] }.first].flatten}.sort {|x,y| y[2] <=> x[2] }.first
+       }.compact.sort {|x,y| y[1] <=> x[1] }.first].flatten
+       }.select{|value| value[1]}.sort {|x,y| y[2] <=> x[2] }.first
   end
 
   def isometric(x,y) #grid co-ordinates to isometric screen co-ordinates
