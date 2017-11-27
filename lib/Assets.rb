@@ -15,7 +15,7 @@ def loadFromFile
 end
 
 def update
-
+  fight
 end
 
 def command(target)
@@ -28,6 +28,14 @@ end
 
 
 private
+
+ def fight
+    if @target.is_a? Asset
+      attack @target
+    else
+      #check for enemies
+    end
+  end
 @position
 @health
 @weapon
@@ -38,39 +46,30 @@ private
 end
 
 class Unit < Asset
+attr_reader :tile
 
-def tile
- @tile
-end
+  def initialize (position, model, worldspace, speed)
+    super(position, model, worldspace)
+    @tile = position
+    @speed = speed
+    @position = @tile.to_floats
+  end
 
-def initialize (position, model, worldspace, speed)
-  super(position, model, worldspace)
-  @tile = position
-  @speed = speed
-  @position = @tile.to_floats
-end
+  def update
+    move
+    super
+  end
 
-def update
-  move
-  fight
-end
-
-def command (target)
-
-     
+  def command (target)     
     if target.is_a? XY then
       @target =  target
 
     else
       super
     end
+  end
 
-
-end
-
-
-
-  def defend (weapon)
+  def defend_against (weapon)
     @health -=weapon.damage
     @player.remove_asset @key if @health <= 0
   end
@@ -104,14 +103,6 @@ private
  #TODO refactor
   end
 
-  def fight
-    if @target.is_a? Asset
-      attack @target
-    else
-      #check for enemies
-    end
-  end
-
   def map
     @worldspace.map.map{|row| row.map{|tile|!tile.occupied}}
   end
@@ -135,7 +126,7 @@ class Weapon
   end
 
   def attack asset
-    asset.defend self unless reloading
+    asset.defend_against self unless reloading
   end
 private
   def reloading
@@ -158,14 +149,3 @@ class Armour
 
 
 end
-
-def test_print_map map
-  map.each {|row| puts(row.map {|value|
-    case value
-    when true
-      "_"
-    else
-      "X"
-    end
-  }.join)}
-  end
