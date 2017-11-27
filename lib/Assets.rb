@@ -52,32 +52,7 @@ end
 
 def update
   move
-end
-
-def move
-  if position.integer_co_ords?
-      @tile = @position.copy
-    if @path then #find next tile on path
-      @next_tile = @path.last.copy
-      @path.pop
-      @path = nil if @path.empty?
-
-    elsif @target.is_a? XY
-      @path =  best_path(@tile, @target , map)
-    elsif @target && (pythagoras @target.tile, @tile ) > (weapon.range / 2)
-      @path = best_path(@tile, @target.tile, map)
-    else
-      attack @target if @target.is_a? Asset
-    end
-  end
-
-  if @next_tile && @next_tile != @tile
-    @position.x += ((@next_tile.x - @tile.x) * @speed / 100)
-    @position.y += ((@next_tile.y - @tile.y) * @speed / 100)
-    @position.x = @position.x.round(2)
-    @position.y = @position.y.round(2)
-  end
- #TODO refactor
+  fight
 end
 
 def command (target)
@@ -93,20 +68,53 @@ def command (target)
 
 end
 
-def attack (asset)
-  @weapon.attack asset
-end
 
-def defend (weapon)
-  @health -=weapon.damage
-  @player.remove_asset @key if @health <= 0
-end
+
+  def defend (weapon)
+    @health -=weapon.damage
+    @player.remove_asset @key if @health <= 0
+  end
 
 private
  
- def map
-@worldspace.map.map{|row| row.map{|tile|!tile.occupied}}
- end
+  def attack (asset)
+    @weapon.attack asset
+  end
+
+  def move
+    if position.integer_co_ords?
+      @tile = @position.copy
+      if @path then #find next tile on path
+        @next_tile = @path.last.copy
+        @path.pop
+        @path = nil if @path.empty?
+      elsif @target.is_a? XY
+        @path =  best_path(@tile, @target , map)
+      elsif @target && (pythagoras @target.tile, @tile ) > (weapon.range / 2)
+        @path = best_path(@tile, @target.tile, map)        
+      end
+    end
+
+    if @next_tile && @next_tile != @tile
+      @position.x += ((@next_tile.x - @tile.x) * @speed / 100)
+      @position.y += ((@next_tile.y - @tile.y) * @speed / 100)
+      @position.x = @position.x.round(2)
+      @position.y = @position.y.round(2)
+    end
+ #TODO refactor
+  end
+
+  def fight
+    if @target.is_a? Asset
+      attack @target
+    else
+      #check for enemies
+    end
+  end
+
+  def map
+    @worldspace.map.map{|row| row.map{|tile|!tile.occupied}}
+  end
 
 end
 
