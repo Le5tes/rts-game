@@ -2,12 +2,12 @@ require_relative 'XY'
 require_relative 'pathfinding'
 
 class Asset
-
-public
+DEFAULT_HEALTH = 100
 attr_reader :model, :position, :weapon
+attr_writer :player, :key
 
-def initialize(position, model,worldspace, weapon = Weapon.new)
-  @position, @model, @worldspace, @weapon = position, model, worldspace, weapon
+def initialize(position, model,worldspace, weapon: Weapon.new, health: DEFAULT_HEALTH)
+  @position, @model, @worldspace, @weapon, @health = position, model, worldspace, weapon, health
 end
 
 def loadFromFile
@@ -66,7 +66,8 @@ def move
       @path =  best_path(@tile, @target , map)
     elsif @target && (pythagoras @target.tile, @tile ) > (weapon.range / 2)
       @path = best_path(@tile, @target.tile, map)
-      puts "working-ish"
+    else
+      attack @target if @target.is_a? Asset
     end
   end
 
@@ -92,16 +93,21 @@ def command (target)
 
 end
 
+def attack (asset)
+  @weapon.attack asset
+end
+
+def defend (weapon)
+  @health -=weapon.damage
+  @player.remove_asset @key if @health <= 0
+end
+
 private
-@speed
-@tile
  
  def map
-@worldspace.map.map{|row| row.map{|tile|
-      !tile.occupied
-      }
-    }
+@worldspace.map.map{|row| row.map{|tile|!tile.occupied}}
  end
+
 end
 
 
@@ -113,8 +119,13 @@ end
 
 class Weapon
   attr_reader :range, :damage
-  def initialize range = 10
+  def initialize range: 10, damage: 10
     @range = range
+    @damage = damage
+  end
+
+  def attack asset
+    asset.defend self
   end
 
 end

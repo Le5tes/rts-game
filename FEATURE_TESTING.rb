@@ -1,11 +1,11 @@
 require 'rubygems'
 require 'gosu'
-require_relative 'Worldspace'
-require_relative 'XY'
-require_relative 'Assets'
-require_relative 'Model'
-require_relative 'Player'
-require_relative 'Interface'
+require './lib/Worldspace'
+require './lib/XY'
+require './lib/Assets'
+require './lib/Model'
+require './lib/Player'
+require './lib/Interface'
 
 ######TESTING#####
 

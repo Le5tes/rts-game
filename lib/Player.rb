@@ -19,6 +19,12 @@ end
 
 def add_asset key, asset
   @assets[key] = asset
+  asset.player = self
+  asset.key = key
+end
+
+def remove_asset key
+  @assets.delete key
 end
 #TODO create + destroy etc.
 
