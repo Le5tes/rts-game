@@ -119,13 +119,29 @@ end
 
 class Weapon
   attr_reader :range, :damage
-  def initialize range: 10, damage: 10
+  def initialize range: 10, damage: 10, reload_time: 30
     @range = range
     @damage = damage
+    @reload_time = reload_time
+    @reloading = @reload_time
   end
 
   def attack asset
-    asset.defend self
+    asset.defend self unless reloading
+  end
+private
+  def reloading
+    if @reloading == @reload_time 
+      @reloading = 0
+      false
+    else
+      @reloading +=1
+      true
+    end
+  end
+
+  def reload_time
+    @reload_time
   end
 
 end
