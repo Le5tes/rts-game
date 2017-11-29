@@ -36,6 +36,8 @@ private
       #check for enemies
     end
   end
+
+
 @position
 @health
 @weapon
@@ -53,6 +55,7 @@ attr_reader :tile
     @tile = position
     @speed = speed
     @position = @tile.to_floats
+    occupy tile
   end
 
   def update
@@ -82,29 +85,56 @@ private
 
   def move
     if position.integer_co_ords?
-      @tile = @position.copy
-      if @path then #find next tile on path
-        @next_tile = @path.last.copy
-        @path.pop
-        @path = nil if @path.empty?
-      elsif @target.is_a? XY
-        @path =  best_path(@tile, @target , map)
-      elsif @target && (pythagoras @target.tile, @tile ) > (weapon.range / 2)
-        @path = best_path(@tile, @target.tile, map)        
+      if @position == @next_tile
+        leave(@tile)
+        @next_tile = nil
+        @tile = @position.copy.to_integers
       end
+
+      if @path then #find next tile on path
+        @next_tile = @path.pop.to_floats 
+        occupy @next_tile       
+        @path = nil if @path.empty?
+      else
+        if @target.is_a? XY
+          if @tile == @target
+            @target = nil
+          else
+            @path =  best_path(@tile, @target , map)
+          end
+        elsif @target && (pythagoras @target.tile, @tile ) > (weapon.range / 2)
+          @path = best_path(@tile, @target.tile, map)       
+        end
+      end
+      
     end
 
-    if @next_tile && @next_tile != @tile
-      @position.x += ((@next_tile.x - @tile.x) * @speed / 100)
-      @position.y += ((@next_tile.y - @tile.y) * @speed / 100)
-      @position.x = @position.x.round(2)
-      @position.y = @position.y.round(2)
+    if @next_tile
+      step_between @tile, @next_tile
     end
  #TODO refactor
   end
 
+  def worldspace
+    @worldspace
+  end
+
+  def occupy (tile)
+    worldspace.map(tile).occupied = true
+  end
+  
+  def leave (tile)
+    worldspace.map(tile).occupied = false
+  end
+
+  def step_between tile, next_tile
+    @position.x += ((next_tile.x - tile.x) * @speed / 100)
+    @position.y += ((next_tile.y - tile.y) * @speed / 100)
+    @position.round!(2)
+  end
+
   def map
-    @worldspace.map.map{|row| row.map{|tile|!tile.occupied}}
+    worldspace.map.map{|row| row.map{|tile|!tile.occupied}}
   end
 
 end

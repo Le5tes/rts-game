@@ -16,8 +16,17 @@ class XY
     XY.new(@x.to_f, @y.to_f)
   end
 
+  def to_integers
+    XY.new(@x.to_i, @y.to_i)
+  end
+
   def integer_co_ords?
     (@x.to_f) == (@x.to_i.to_f) and (@y.to_f) == (@y.to_i.to_f)
+  end
+
+  def round! (decimal_places = 0)
+    @x = @x.round(decimal_places)
+    @y = @y.round(decimal_places)
   end
 
 end

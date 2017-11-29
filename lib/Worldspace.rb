@@ -9,7 +9,7 @@ require_relative 'XY'
 
 class WorldSpace
 
-  attr_reader :players, :tilesize, :map
+  attr_reader :players, :tilesize
   def initialize (players = {} , current_player = nil, map = nil, origin = (XY.new(0,200)), tilesize = (XY.new(24,14)))
 
     @players, @currentplayer, @map, @origin, @tilesize = players, current_player, map, origin, tilesize
@@ -23,6 +23,14 @@ class WorldSpace
 
   def loadFromFile(file)
     ##TODO
+  end
+
+  def map (xy = nil)
+    if xy
+      map[xy.x][xy.y]
+    else
+      @map
+    end
   end
 
   def click (x,y)

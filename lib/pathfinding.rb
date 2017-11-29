@@ -1,21 +1,23 @@
 require_relative 'XY'
 #implements A* pathfinding on a 2d grid, allows diagonal movement where a straight move scores 2 and a diagonal scores 3
 
-def findpath (start, target, map, openlist = [], closedlist = [], g_value = 0) #Implements A* pathfinding algorithm
-  closedlist << [start, g_value]
+def findpath (start, target, map, openlist = [], closedlist = [], g_value = 0, h_value = 0) #Implements A* pathfinding algorithm
+  closedlist << [start, g_value, h_value]
+  #p closedlist
   return closedlist if closedlist[-1][0] == target
-  surrounding_tiles(start).select {|co_ord| ( within_bounds?(co_ord, map) && (!closedlist.include? co_ord) && map[co_ord.x][co_ord.y]) }.each{|co_ord|
+  surrounding_tiles(start).select {|co_ord| ( within_bounds?(co_ord, map) && (!((openlist.transpose[0].include? co_ord)if openlist[0].is_a? Array))  && (!(closedlist.transpose[0].include? co_ord) ) && map[co_ord.x][co_ord.y]) }.each{|co_ord|
     g = calcg(g_value, start, co_ord)
     h = calch(co_ord,target)
     f = g + h
     openlist << [co_ord, g, h, f]
   }
-  return false if openlist.empty?
+  return closedlist if openlist.empty?
   openlist.sort! {|a,b| b[3] <=> a[3]}
   newstart = openlist[-1][0]
   newg = openlist[-1][1]
+  newh = openlist[-1][2]
   openlist.pop
-   findpath(newstart, target,map,openlist,closedlist,newg)
+   findpath(newstart, target,map,openlist,closedlist,newg, newh)
 end
 
 def within_bounds? co_ords, map
@@ -40,10 +42,14 @@ def are_adjacent? (a,b)
 end
 
 def best_path (start, target, map)
+  return false if !within_bounds?(target, map)
   v = findpath(start, target, map)
-  return v if v == false
-  path = [v.last]
-  v.pop
+   x = v.sort{|a,b| b[2]<=>a[2]}
+  x = x.length > 1 ? x[-2][0] :x[0][0]
+  #p "first"
+  #p x
+  return best_path(start,x, map ) if v.last[0] != target
+  path = [v.pop]
   until are_adjacent? path.last[0], start
     path << ((v.select {|x| are_adjacent? x[0], path.last[0]}).sort {|a,b| a[1]<=> b[1]}).first
   end
