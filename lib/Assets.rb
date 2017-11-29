@@ -93,8 +93,12 @@ private
 
       if @path then #find next tile on path
         @next_tile = @path.pop.to_floats 
-        occupy @next_tile       
-        @path = nil if @path.empty?
+        if occupied? @next_tile
+          @path = nil
+        else
+          occupy @next_tile       
+          @path = nil if @path.empty?
+        end
       else
         if @target.is_a? XY
           if @tile == @target
@@ -121,6 +125,10 @@ private
 
   def occupy (tile)
     worldspace.map(tile).occupied = true
+  end
+
+  def occupied? tile
+    worldspace.map(tile).occupied
   end
   
   def leave (tile)
