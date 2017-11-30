@@ -8,6 +8,7 @@ attr_writer :player, :key
 
 def initialize(position, model,worldspace, weapon: Weapon.new, health: DEFAULT_HEALTH)
   @position, @model, @worldspace, @weapon, @health = position, model, worldspace, weapon, health
+  occupy @position
 end
 
 def loadFromFile
@@ -26,19 +27,52 @@ def tile
   @position
 end
 
+def defend_against (weapon)
+  @health -=weapon.damage
+  die if @health <= 0
+end
+
 
 private
 
  def fight
     if @target.is_a? Asset
-      attack @target
+      if out_of_range?(@target.position) || ((attack @target) == :dead)
+        @target = nil
+      end
     else
       #check for enemies
     end
   end
 
+  def die
+    leave tile
+    @player.remove_asset @key 
+    :dead
+  end
+
   def attack (asset)
     @weapon.attack asset
+  end
+
+  def out_of_range? target
+    pythagoras(@position,target) > weapon.range
+  end
+
+  def worldspace
+    @worldspace
+  end
+
+  def occupy(locus)
+    worldspace.map(locus).occupied = true
+  end
+
+  def occupied? tile
+    worldspace.map(tile).occupied
+  end
+  
+  def leave (locus)
+    worldspace.map(locus).occupied = false
   end
 
 
@@ -59,7 +93,6 @@ attr_reader :tile
     @tile = position
     @speed = speed
     @position = @tile.to_floats
-    occupy tile
   end
 
   def update
@@ -74,11 +107,6 @@ attr_reader :tile
     else
       super
     end
-  end
-
-  def defend_against (weapon)
-    @health -=weapon.damage
-    die if @health <= 0
   end
 
 private
@@ -115,21 +143,7 @@ private
  #TODO refactor
   end
 
-  def worldspace
-    @worldspace
-  end
-
-  def occupy (tile)
-    worldspace.map(tile).occupied = true
-  end
-
-  def occupied? tile
-    worldspace.map(tile).occupied
-  end
   
-  def leave (tile)
-    worldspace.map(tile).occupied = false
-  end
 
   def get_path (target)
     @path =  best_path(@tile, target , map)
@@ -139,11 +153,6 @@ private
     @position.x += ((next_tile.x - tile.x) * @speed / 100)
     @position.y += ((next_tile.y - tile.y) * @speed / 100)
     @position.round!(2)
-  end
-
-  def die
-    leave @tile
-    @player.remove_asset @key 
   end
 
   def map
@@ -161,7 +170,7 @@ end
 
 class Weapon
   attr_reader :range, :damage
-  def initialize range: 10, damage: 10, reload_time: 30
+  def initialize range: 5, damage: 10, reload_time: 30
     @range = range
     @damage = damage
     @reload_time = reload_time
