@@ -37,6 +37,10 @@ private
     end
   end
 
+  def attack (asset)
+    @weapon.attack asset
+  end
+
 
 @position
 @health
@@ -74,14 +78,10 @@ attr_reader :tile
 
   def defend_against (weapon)
     @health -=weapon.damage
-    @player.remove_asset @key if @health <= 0
+    die if @health <= 0
   end
 
 private
- 
-  def attack (asset)
-    @weapon.attack asset
-  end
 
   def move
     if position.integer_co_ords?
@@ -101,13 +101,9 @@ private
         end
       else
         if @target.is_a? XY
-          if @tile == @target
-            @target = nil
-          else
-            @path =  best_path(@tile, @target , map)
-          end
+          @tile == @target ? @target = nil : get_path(@target)
         elsif @target && (pythagoras @target.tile, @tile ) > (weapon.range / 2)
-          @path = best_path(@tile, @target.tile, map)       
+          get_path @target.tile       
         end
       end
       
@@ -135,10 +131,19 @@ private
     worldspace.map(tile).occupied = false
   end
 
+  def get_path (target)
+    @path =  best_path(@tile, target , map)
+  end
+
   def step_between tile, next_tile
     @position.x += ((next_tile.x - tile.x) * @speed / 100)
     @position.y += ((next_tile.y - tile.y) * @speed / 100)
     @position.round!(2)
+  end
+
+  def die
+    leave @tile
+    @player.remove_asset @key 
   end
 
   def map
