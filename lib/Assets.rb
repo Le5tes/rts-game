@@ -39,23 +39,23 @@ attr_writer :target
  def fight
     if target.is_a? Asset
       attack_target unless out_of_range?(target.position) 
-    else
-      scan_for_enemies
     end
+    @target = scan_for_enemies unless target
   end
 
   def scan_for_enemies
-
+    t = worldspace.assets.reject {|asset| out_of_range?(asset.position) || (asset.player == player) }
+    t.first unless t.empty?
   end
 
   def die
     leave tile
     player.remove_asset key 
-    :dead
   end
 
   def attack_target
-    target = nil if attack(@target) == :dead
+    attack(target)
+    @target = nil if target.health <=0
   end
 
   def attack (asset)
