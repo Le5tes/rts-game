@@ -3,7 +3,7 @@ require_relative 'pathfinding'
 
 class Asset
 DEFAULT_HEALTH = 100
-attr_reader :model, :position, :weapon
+attr_reader :model, :position, :weapon, :health, :player, :key 
 attr_writer :player, :key
 
 def initialize(position, model,worldspace, weapon: Weapon.new, health: DEFAULT_HEALTH)
@@ -20,7 +20,7 @@ def update
 end
 
 def command(target)
-  @target = @worldspace.players[target[0]].assets[target[1]] if target.is_a? Array
+  @target = target 
 end
 
 def tile
@@ -29,38 +29,41 @@ end
 
 def defend_against (weapon)
   @health -=weapon.damage
-  die if @health <= 0
+  die if health <= 0
 end
 
-
 private
+attr_reader :worldspace, :target
+attr_writer :target
 
  def fight
-    if @target.is_a? Asset
-      if out_of_range?(@target.position) || ((attack @target) == :dead)
-        @target = nil
-      end
+    if target.is_a? Asset
+      attack_target unless out_of_range?(target.position) 
     else
-      #check for enemies
+      scan_for_enemies
     end
+  end
+
+  def scan_for_enemies
+
   end
 
   def die
     leave tile
-    @player.remove_asset @key 
+    player.remove_asset key 
     :dead
   end
 
+  def attack_target
+    target = nil if attack(@target) == :dead
+  end
+
   def attack (asset)
-    @weapon.attack asset
+    weapon.attack asset
   end
 
   def out_of_range? target
     pythagoras(@position,target) > weapon.range
-  end
-
-  def worldspace
-    @worldspace
   end
 
   def occupy(locus)
@@ -76,9 +79,9 @@ private
   end
 
 
-@position
-@health
-@weapon
+
+
+
 @armour
 @unlockTech
 @model
@@ -100,15 +103,6 @@ attr_reader :tile
     super
   end
 
-  def command (target)     
-    if target.is_a? XY then
-      @target =  target
-
-    else
-      super
-    end
-  end
-
 private
 
   def move
@@ -121,11 +115,13 @@ private
 
       if @path then #find next tile on path
         @next_tile = @path.pop.to_floats 
+        @path = nil if @path.empty?
+
         if occupied? @next_tile
+          @next_tile = nil
           @path = nil
         else
           occupy @next_tile       
-          @path = nil if @path.empty?
         end
       else
         if @target.is_a? XY
@@ -165,6 +161,11 @@ end
 class Building < Asset
 
 
+def fight
+  target = nil if target && out_of_range?(target) 
+  super
+end
+
 
 end
 
@@ -174,7 +175,7 @@ class Weapon
     @range = range
     @damage = damage
     @reload_time = reload_time
-    @reloading = @reload_time
+    @reloading = reload_time
   end
 
   def attack asset
@@ -182,7 +183,7 @@ class Weapon
   end
 private
   def reloading
-    if @reloading == @reload_time 
+    if @reloading == reload_time 
       @reloading = 0
       false
     else

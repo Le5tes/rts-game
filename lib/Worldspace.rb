@@ -35,12 +35,10 @@ class WorldSpace
 
   def click (x,y)
 
-    #puts (get_asset_from_pos(x,y))
-    #puts ""
     if  !@currentcommand
       #1st click, return a player key and asset key
-      command_asset_keys = get_asset_from_pos(x,y)
-      @currentcommand = command_asset_keys[1] if (command_asset_keys && command_asset_keys[0] == @currentplayer)
+      command_asset = get_asset_from_pos(x,y)
+      @currentcommand = command_asset if (command_asset && command_asset.player.key == @currentplayer)
     else
       #2nd click return either another player key and asset key or a tile
       #then provide that as a command for the original asset
@@ -51,20 +49,36 @@ class WorldSpace
     #TODO
   end
 
-  def command asset_key, target
-    puts "Command asset: #{asset_key.to_s}, target: #{(target.is_a? Array) ? target.to_s : target.x.to_s + "," + target.y.to_s }"
-    @players[@currentplayer].assets[asset_key].command target
+  def command asset, target
+    puts "Command asset: #{asset.key.to_s}, target: #{target.to_s}"
+    asset.command target
   end
 
 #Returns an array containing a playerkey, an assetkey and a z value for an asset, from a pair of co-ordinates corresponding to a mouseclick.
 #Returns the asset with the highest z value if multiple on top of each other.
   def get_asset_from_pos(x,y)
-    a = players.map{|key, player| [key, player.assets.map {|key,asset|
-      isometric(asset.position.x, asset.position.y) {|x1,y1,z|
-         asset.model.within_drawn?(x, y, x1, y1) ? [key,z] : nil
-         }
-       }.compact.sort {|x,y| y[1] <=> x[1] }.first].flatten
-       }.select{|value| value[1]}.sort {|x,y| y[2] <=> x[2] }.first
+    #old method
+    # a = players.map{|key, player| [key, player.assets.map {|key,asset|
+    #   isometric(asset.position.x, asset.position.y) {|x1,y1,z|
+    #      asset.model.within_drawn?(x, y, x1, y1) ? [key,z] : nil
+    #      }
+    #    }.compact.sort {|x,y| y[1] <=> x[1] }.first].flatten
+    #    }.select{|value| value[1]}.sort {|x,y| y[2] <=> x[2] }.first
+    # refactored to extract method assets
+
+    a = assets.map{|asset|[asset,
+    isometric(asset.position.x, asset.position.y) {|x1,y1,z|
+      asset.model.within_drawn?(x, y, x1, y1) ? z : nil
+    }]}
+    .select{|value| value[1]}
+    .sort{|a,b| b[1] <=> a[1]}
+    .first
+    
+    a.first if a
+  end
+
+  def assets
+    players.map{|key, player| player.assets.map{|key,asset| asset}}.flatten
   end
 
   def isometric(x,y) #grid co-ordinates to isometric screen co-ordinates
@@ -82,11 +96,11 @@ class WorldSpace
 
   def draw #done some refactoring, any more to do? One day tiles will need z-order (for hills and the like)
     @map.each.with_index {|row, yi| row.each.with_index {|tile, xi|
-      isometric(xi,yi) {|x,y,z|tile.image.draw(x,y,-1900)}
+      isometric(xi,yi) {|x,y,z|tile.image.draw(x,y,z-100)}
       }}
-    @players.each {|key,player| player.assets.each {|key,asset|
-      isometric(asset.position.x, asset.position.y) {|x,y,z| asset.model.draw(x,y,z, player.colour)}
-      }}
+    assets.each{|asset|
+      isometric(asset.position.x, asset.position.y) {|x,y,z| asset.model.draw(x,y,z, asset.player.colour)}
+      }
   end
 
 end

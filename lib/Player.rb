@@ -1,8 +1,8 @@
 require_relative 'Assets'
 class Player
-attr_reader :assets, :colour, :cash
-def initialize (starting_assets,colour, starting_cash)
-  @assets, @colour, @cash = starting_assets, colour, starting_cash
+attr_reader :assets, :colour, :cash, :key
+def initialize (starting_assets,colour, starting_cash, key)
+  @assets, @colour, @cash, @key = starting_assets, colour, starting_cash, key
 end
 
 def bill cost
