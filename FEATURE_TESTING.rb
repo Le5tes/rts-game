@@ -35,21 +35,30 @@ def worldspaceTest
     img = Gosu::Image.new("imgs/Tile1.png")
     tankimg = Gosu::Image.new("imgs/tank1.png")
     turretimg = Gosu::Image.new("imgs/turret1.png")
-    map = Array.new(10) {|x| x = Array.new(10) {|x| x = Tile.new(img,1)} }
+    map = Array.new(15) {|x| x = Array.new(15) {|x| x = Tile.new(img,1)} }
     player = Player.new({}, 0xff_900000, 10000, :testplayer)
     player2 = Player.new({}, 0xff_009000, 10000, :otherplayer)
-    my_worldspace = WorldSpace.new({testplayer: player, otherplayer: player2},:testplayer,map,XY.new(0,200))
+    my_worldspace = WorldSpace.new({testplayer: player, otherplayer: player2},:otherplayer,map,XY.new(0,200))
     tank = Unit.new(XY.new(3,2),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
     tank2 = Unit.new(XY.new(3,3),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
     tank3 = Unit.new(XY.new(3,4),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
     tank4 = Unit.new(XY.new(6,4),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
+    tank5 = Unit.new(XY.new(12,8),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
+   tank6 = Unit.new(XY.new(12,9),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
+   tank7 = Unit.new(XY.new(12,10),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
+   tank8 = Unit.new(XY.new(12,11),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
+   
     turret1 = Building.new(XY.new(8,8),Model.new([turretimg],XY.new(0,4)),my_worldspace)
-    turret2 = Building.new(XY.new(2,2),Model.new([turretimg],XY.new(0,4)),my_worldspace)
+    turret2 = Building.new(XY.new(4,4),Model.new([turretimg],XY.new(0,4)),my_worldspace)
    
     player.add_asset :tank1, tank
     player.add_asset :tank2, tank2
     player.add_asset :tank3, tank3
     player2.add_asset :tank4, tank4
+    player2.add_asset :tank5, tank5
+    player2.add_asset :tank6, tank6
+    player2.add_asset :tank7, tank7
+    player2.add_asset :tank8, tank8
     player2.add_asset :turret1, turret1
     player.add_asset :turret2, turret2
 
