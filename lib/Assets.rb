@@ -78,13 +78,9 @@ attr_writer :target
     worldspace.map(locus).occupied = false
   end
 
-
-
-
-
-@armour
-@unlockTech
-@model
+# @armour
+# @unlockTech
+# @model
 
 end
 
@@ -160,12 +156,40 @@ end
 
 class Building < Asset
 
+  def initialize(position, model, worldspace, size= XY.new(1,1))
+    @size = size
+    super(position, model, worldspace)
+  end
 
-def fight
-  target = nil if target && out_of_range?(target) 
-  super
-end
+  private
+  attr_reader :size
 
+  def fight
+    target = nil if target && out_of_range?(target) 
+    super
+  end
+
+  def occupy(locus)
+    all_squares(locus) { |square|
+      super(square)
+    }
+  end
+
+  def leave(locus)
+    all_squares(locus) { |square|
+      super(square)
+    }
+  end
+
+  def all_squares(locus)
+    size.x.times{|x| size.y.times {|y|
+      yield(XY.new(locus.x + x,locus.y + y))
+    }} 
+  end
+
+  def build_asset(asset)
+    player.add_asset(asset)
+  end
 
 end
 
