@@ -47,10 +47,14 @@ def worldspaceTest
    tank6 = Unit.new(XY.new(12,9),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
    tank7 = Unit.new(XY.new(12,10),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
    tank8 = Unit.new(XY.new(12,11),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
+   tank9 = Unit.new(XY.new(3,5),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
+   tank10 = Unit.new(XY.new(3,7),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
    
     turret1 = Building.new(XY.new(8,8),Model.new([turretimg],XY.new(0,4)),my_worldspace)
     turret2 = Building.new(XY.new(4,4),Model.new([turretimg],XY.new(0,4)),my_worldspace)
+    turret3 = Building.new(XY.new(12,12),Model.new([turretimg],XY.new(0,4)),my_worldspace)
    
+
     player.add_asset :tank1, tank
     player.add_asset :tank2, tank2
     player.add_asset :tank3, tank3
@@ -60,7 +64,11 @@ def worldspaceTest
     player2.add_asset :tank7, tank7
     player2.add_asset :tank8, tank8
     player2.add_asset :turret1, turret1
+    player2.add_asset :turret3, turret3
     player.add_asset :turret2, turret2
+    player.add_asset :tank9, tank9
+    player.add_asset :tank10, tank10
+
 
 
     #puts map.to_s
