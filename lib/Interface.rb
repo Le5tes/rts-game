@@ -62,7 +62,14 @@ class Screen
 
   def mouse_click(id, mouse_x, mouse_y)
     if id == Gosu::MS_LEFT
-      if (((@buttons.map {|button| button.click(mouse_x, mouse_y) }).sum) == 0) then (@worldspace.click(mouse_x, mouse_y) if @worldspace) end
+      if ((@buttons.map {|button| button.click(mouse_x, mouse_y) }).sum) == 0
+        if @worldspace 
+          if (asset = @worldspace.click(mouse_x, mouse_y)).is_a? Asset 
+            #draw asset on side
+            #if asset is a building then draw constructable assets
+          end 
+        end
+      end
     end
   end
 end

@@ -36,3 +36,5 @@ end
 def pythagoras a , b
   Math.sqrt(((a.x-b.x)**2 + (a.y-b.y)**2).to_f)
 end
+
+

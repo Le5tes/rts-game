@@ -156,9 +156,10 @@ end
 
 class Building < Asset
 
-  def initialize(position, model, worldspace, size= XY.new(1,1))
+  def initialize(position, model, worldspace, size= XY.new(1,1), created_assets = [])
     @size = size
     super(position, model, worldspace)
+    @created_assets = created_assets
   end
 
   private

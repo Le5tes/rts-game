@@ -42,7 +42,7 @@ def worldspaceTest
     tank = Unit.new(XY.new(3,2),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
     tank2 = Unit.new(XY.new(3,3),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
     tank3 = Unit.new(XY.new(3,4),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
-    tank4 = Unit.new(XY.new(6,4),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
+    tank4 = Unit.new(XY.new(12,13),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
     tank5 = Unit.new(XY.new(12,8),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
    tank6 = Unit.new(XY.new(12,9),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)
    tank7 = Unit.new(XY.new(12,10),  Model.new([tankimg],XY.new(0,0)),my_worldspace,10)

@@ -3,6 +3,7 @@ require 'gosu'
 require_relative 'Player'
 require_relative 'Assets'
 require_relative 'XY'
+require_relative 'isometric'
 # at some point seperate all interface functions into a viewport class
 #thus all players in a multiplayer game will have their own viewport but only one worldspace entity will exist on the server
 #I think worldspace wouldn't even require gosu then? Don't quite understand how requireing works currently, will do some testing later, for now leave as is
@@ -13,7 +14,7 @@ class WorldSpace
   def initialize (players = {} , current_player = nil, map = nil, origin = (XY.new(0,200)), tilesize = (XY.new(24,14)))
 
     @players, @currentplayer, @map, @origin, @tilesize = players, current_player, map, origin, tilesize
-
+    @isometric = Isometric.new(tilesize, origin)
 
   end
 
@@ -42,7 +43,7 @@ class WorldSpace
     else
       #2nd click return either another player key and asset key or a tile
       #then provide that as a command for the original asset
-      target =  rev_isometric(x,y) {|x,y| XY.new(x,y)} unless (target = get_asset_from_pos(x,y))
+      target =  @isometric.backward(x,y) {|x,y| XY.new(x-1,y)} unless (target = get_asset_from_pos(x,y))
       command @currentcommand, target
       @currentcommand = nil
     end
@@ -57,17 +58,9 @@ class WorldSpace
 #Returns an array containing a playerkey, an assetkey and a z value for an asset, from a pair of co-ordinates corresponding to a mouseclick.
 #Returns the asset with the highest z value if multiple on top of each other.
   def get_asset_from_pos(x,y)
-    #old method
-    # a = players.map{|key, player| [key, player.assets.map {|key,asset|
-    #   isometric(asset.position.x, asset.position.y) {|x1,y1,z|
-    #      asset.model.within_drawn?(x, y, x1, y1) ? [key,z] : nil
-    #      }
-    #    }.compact.sort {|x,y| y[1] <=> x[1] }.first].flatten
-    #    }.select{|value| value[1]}.sort {|x,y| y[2] <=> x[2] }.first
-    # refactored to extract method assets
 
     a = assets.map{|asset|[asset,
-    isometric(asset.position.x, asset.position.y) {|x1,y1,z|
+    @isometric.forward(asset.position.x, asset.position.y) {|x1,y1,z|
       asset.model.within_drawn?(x, y, x1, y1) ? z : nil
     }]}
     .select{|value| value[1]}
@@ -81,25 +74,12 @@ class WorldSpace
     players.map{|key, player| player.assets.map{|key,asset| asset}}.flatten
   end
 
-  def isometric(x,y) #grid co-ordinates to isometric screen co-ordinates
-    newx = @origin.x + x*tilesize.x + y*tilesize.x
-    newy = @origin.y + x*tilesize.y - y*tilesize.y
-    zorder = x-y
-    yield(newx,newy,zorder)
-  end
-
-  def rev_isometric(x,y) #isometric screen co-ordinates to grid co-ordinates
-    newx = (((x - @origin.x).to_f/tilesize.x + (y - @origin.y).to_f/tilesize.y)/2).round - 1 #too lazy to work out why this was off by 1 so just subtracted 1...
-    newy = (((x - @origin.x).to_f/tilesize.x - (y - @origin.y).to_f/tilesize.y)/2).round     #also this should have worked with to_i rather than round...
-    yield(newx,newy)
-  end
-
   def draw #done some refactoring, any more to do? One day tiles will need z-order (for hills and the like)
     @map.each.with_index {|row, yi| row.each.with_index {|tile, xi|
-      isometric(xi,yi) {|x,y,z|tile.image.draw(x,y,z-100)}
+      @isometric.forward(xi,yi) {|x,y,z|tile.image.draw(x,y,z-100)}
       }}
     assets.each{|asset|
-      isometric(asset.position.x, asset.position.y) {|x,y,z| asset.model.draw(x,y,z, asset.player.colour)}
+      @isometric.forward(asset.position.x, asset.position.y) {|x,y,z| asset.model.draw(x,y,z, asset.player.colour)}
       }
   end
 
