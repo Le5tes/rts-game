@@ -1,0 +1,26 @@
+Unit
+
+model {
+Model
+
+images [tank1.png]
+origin {
+XY
+
+x 0
+y 0
+}
+size {
+XY
+
+x 50
+y 30
+}
+}
+weapon {
+Weapon
+
+range 5
+damage 10
+reload_time 30
+}

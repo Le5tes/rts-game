@@ -6,7 +6,7 @@ DEFAULT_HEALTH = 100
 attr_reader :model, :position, :weapon, :health, :player, :key 
 attr_writer :player, :key
 
-def initialize(position, model,worldspace, weapon: Weapon.new, health: DEFAULT_HEALTH)
+def initialize(position: XY.new(), model: nil, worldspace:nil , weapon: Weapon.new, health: DEFAULT_HEALTH , created_assets: [])
   @position, @model, @worldspace, @weapon, @health = position, model, worldspace, weapon, health
   occupy @position
 end
@@ -30,6 +30,10 @@ end
 def defend_against (weapon)
   @health -=weapon.damage
   die if health <= 0
+end
+
+def draw x,y,z
+  model.draw(x,y,z,player.colour)
 end
 
 private
@@ -87,8 +91,8 @@ end
 class Unit < Asset
 attr_reader :tile
 
-  def initialize (position, model, worldspace, speed)
-    super(position, model, worldspace)
+  def initialize (position: XY.new(), model: nil, worldspace: nil, speed: 0, weapon: Weapon.new)
+    super(position: position, model: model, worldspace: worldspace)
     @tile = position
     @speed = speed
     @position = @tile.to_floats
@@ -156,7 +160,7 @@ end
 
 class Building < Asset
 
-  def initialize(position, model, worldspace, size= XY.new(1,1), created_assets = [])
+  def initialize(position, model, worldspace, size= XY.new(1,1))
     @size = size
     super(position, model, worldspace)
     @created_assets = created_assets
@@ -222,6 +226,15 @@ private
   end
 
 end
+
+class Tech
+  def initialize (args)
+
+  end
+  
+end
+
+
 
 class Armour
 

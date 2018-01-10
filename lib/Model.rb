@@ -4,7 +4,7 @@ require_relative 'XY'
 class Model
 attr_reader :origin, :size
 
-def initialize (images, origin, size = XY.new(50,30))
+def initialize (images: nil, origin: XY.new(0,0), size: XY.new(50,30))
   @images, @origin, @size = images, origin, size
   @currentimg = @images[0]
 end

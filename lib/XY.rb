@@ -1,6 +1,6 @@
 class XY
   attr_accessor :x , :y
-  def initialize (x,y)
+  def initialize (x: 0,y:0)
     @x, @y = x, y
   end
 

@@ -2,6 +2,7 @@ require 'rubygems'
 require 'gosu'
 require_relative 'Player'
 require_relative 'Assets'
+require_relative 'Model'
 require_relative 'XY'
 require_relative 'isometric'
 # at some point seperate all interface functions into a viewport class

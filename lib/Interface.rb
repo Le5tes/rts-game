@@ -35,7 +35,7 @@ end
 
 class Screen
 
-  def initialize (labels = [], buttons = [], worldspace = nil, background = nil)
+  def initialize (labels = [], buttons = [], worldspace = nil, background = nil, sidebar = SideBar.new)
     @labels, @buttons, @worldspace, @background = labels, buttons, worldspace, background
   end
 
@@ -65,13 +65,21 @@ class Screen
       if ((@buttons.map {|button| button.click(mouse_x, mouse_y) }).sum) == 0
         if @worldspace 
           if (asset = @worldspace.click(mouse_x, mouse_y)).is_a? Asset 
-            #draw asset on side
-            #if asset is a building then draw constructable assets
+            sidebar.draw asset
           end 
         end
       end
     end
   end
+end
+class SideBar
+  INDENTATION = 10
+  ZPOSITION = 1000
+  def draw asset, xy
+    asset.draw(xy.x+INDENTATION, xy+ INDENTATION, ZPOSITION)
+    asset.created_assets.each_with_index {|asset, i| }
+  end
+
 end
 class Label
 
