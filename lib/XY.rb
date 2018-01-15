@@ -1,6 +1,8 @@
 class XY
   attr_accessor :x , :y
-  def initialize (x: 0,y:0)
+  def initialize (x = nil,y = nil,hashx: 0,hashy:0)
+    x ||= hashx
+    y ||= hashy
     @x, @y = x, y
   end
 

@@ -7,7 +7,7 @@ attr_reader :model, :position, :weapon, :health, :player, :key
 attr_writer :player, :key
 
 def initialize(position: XY.new(), model: nil, worldspace:nil , weapon: Weapon.new, health: DEFAULT_HEALTH , created_assets: [])
-  @position, @model, @worldspace, @weapon, @health = position, model, worldspace, weapon, health
+  @position, @model, @worldspace, @weapon, @health, @created_assets = position, model, worldspace, weapon, health, created_assets
   occupy @position
 end
 
@@ -91,10 +91,10 @@ end
 class Unit < Asset
 attr_reader :tile
 
-  def initialize (position: XY.new(), model: nil, worldspace: nil, speed: 0, weapon: Weapon.new)
-    super(position: position, model: model, worldspace: worldspace)
-    @tile = position
-    @speed = speed
+  def initialize (params)
+    super(params)
+    @tile = params[:position]
+    @speed = params[:speed]
     @position = @tile.to_floats
   end
 
@@ -160,10 +160,9 @@ end
 
 class Building < Asset
 
-  def initialize(position, model, worldspace, size= XY.new(1,1))
-    @size = size
+  def initialize(params)
+    @size = params[:size]
     super(position, model, worldspace)
-    @created_assets = created_assets
   end
 
   private

@@ -9,10 +9,10 @@ let(:my_file) {double(:file)}
 
 TestConst = nil
 
-  describe "#feature_test_load" do
-  	require 'Assets'
-  	p FileAccessor.new.load "/Users/tim/Documents/Projects/RTS/rts-game/data/default_tank"
-  end
+  # describe "#feature_test_load" do
+  # 	require 'Assets'
+  # 	p FileAccessor.new.load "/Users/tim/Documents/Projects/RTS/rts-game/data/default_tank"
+  # end
   describe "#save" do
   	it "creates a file containing the information required to initialize an object" do
 
