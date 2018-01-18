@@ -36,7 +36,7 @@ end
 class Screen
 
   def initialize (labels = [], buttons = [], worldspace = nil, background = nil, sidebar = SideBar.new)
-    @labels, @buttons, @worldspace, @background = labels, buttons, worldspace, background
+    @labels, @buttons, @worldspace, @background, @sidebar = labels, buttons, worldspace, background, sidebar
   end
 
   def loadFromFile (file)
@@ -65,7 +65,7 @@ class Screen
       if ((@buttons.map {|button| button.click(mouse_x, mouse_y) }).sum) == 0
         if @worldspace 
           if (asset = @worldspace.click(mouse_x, mouse_y)).is_a? Asset 
-            sidebar.draw asset
+            # @sidebar.draw asset
           end 
         end
       end

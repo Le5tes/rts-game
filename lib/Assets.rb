@@ -1,5 +1,6 @@
 require_relative 'XY'
 require_relative 'pathfinding'
+require 'active_support/core_ext/hash'
 
 class Asset
 DEFAULT_HEALTH = 100
@@ -92,9 +93,10 @@ class Unit < Asset
 attr_reader :tile
 
   def initialize (params)
-    super(params)
-    @tile = params[:position]
     @speed = params[:speed]
+    super(params.except(:speed))
+    @tile = params[:position]
+    
     @position = @tile.to_floats
   end
 
@@ -162,7 +164,8 @@ class Building < Asset
 
   def initialize(params)
     @size = params[:size]
-    super(position, model, worldspace)
+    @size ||= XY.new(1,1)
+    super(params.except(:size))
   end
 
   private
