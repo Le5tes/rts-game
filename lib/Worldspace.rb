@@ -80,7 +80,7 @@ class WorldSpace
       @isometric.forward(xi,yi) {|x,y,z|tile.image.draw(x,y,z-100)}
       }}
     assets.each{|asset|
-      @isometric.forward(asset.position.x, asset.position.y) {|x,y,z| asset.model.draw(x,y,z, asset.player.colour)}
+      @isometric.forward(asset.position.x, asset.position.y) {|x,y,z| asset.draw(x,y,z)}
       }
   end
 

@@ -45,6 +45,7 @@ class Screen
   def draw
     if @worldspace
        @worldspace.draw
+       @sidebar.draw
      elsif @background
        @background.draw 0, 0, 0
      end
@@ -64,9 +65,8 @@ class Screen
     if id == Gosu::MS_LEFT
       if ((@buttons.map {|button| button.click(mouse_x, mouse_y) }).sum) == 0
         if @worldspace 
-          if (asset = @worldspace.click(mouse_x, mouse_y)).is_a? Asset 
-            # @sidebar.draw asset
-          end 
+          asset = @worldspace.click(mouse_x, mouse_y)
+          @sidebar.add asset
         end
       end
     end
@@ -74,11 +74,26 @@ class Screen
 end
 class SideBar
   INDENTATION = 10
-  ZPOSITION = 1000
-  def draw asset, xy
-    asset.draw(xy.x+INDENTATION, xy+ INDENTATION, ZPOSITION)
-    asset.created_assets.each_with_index {|asset, i| }
+  ZPOSITION = 100.0
+  def initialize
+    @xy = XY.new(0,0)
   end
+  def draw 
+    if @asset
+      @asset.draw(xy.x+INDENTATION, xy.y+ INDENTATION, ZPOSITION) 
+      @asset.created_assets.each_with_index {|subasset, i| subasset.draw(xy.x+INDENTATION, xy.y+ INDENTATION + (i+1) * 30,ZPOSITION) }
+    end
+  end
+  def add asset
+    if asset.is_a? Asset
+      @asset = asset
+    else
+      @asset = nil
+    end 
+  end
+
+  private
+  attr_reader :xy
 
 end
 class Label

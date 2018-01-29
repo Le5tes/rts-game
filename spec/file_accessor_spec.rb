@@ -45,7 +45,6 @@ TestConst = nil
   		expect(TestConst).to receive(:new).with(parameters)
   		subject.build_class(:TestConst, parameters)
   	end
-    it 
   end
 
 

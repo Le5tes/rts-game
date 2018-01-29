@@ -13,7 +13,8 @@ def initialize (images = nil, origin = nil, size = nil ,images1: nil, origin1: X
 end
 
 def draw x, y, z, colour = 0xff_ffffff
-  @currentimg.draw x - @origin.x, y - @origin.y, z, 1, 1, colour
+  colour = 0xff_ffffff if colour.nil?
+  @currentimg.draw(x - @origin.x, y - @origin.y, z, 1, 1, colour)
 end
 
 #returns true or false to indicate whether a set of co-ordinates (x1,y1) is within the bounds of the model's drawn image based on it's draw co-ordinates (x2,y2)

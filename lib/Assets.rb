@@ -4,7 +4,7 @@ require 'active_support/core_ext/hash'
 
 class Asset
 DEFAULT_HEALTH = 100
-attr_reader :model, :position, :weapon, :health, :player, :key 
+attr_reader :model, :position, :weapon, :health, :player, :key, :created_assets 
 attr_writer :player, :key
 
 def initialize(position: XY.new(), model: nil, worldspace:nil , weapon: Weapon.new, health: DEFAULT_HEALTH , created_assets: [])
@@ -34,7 +34,8 @@ def defend_against (weapon)
 end
 
 def draw x,y,z
-  model.draw(x,y,z,player.colour)
+  colour = player.colour if player
+  model.draw(x,y,z,colour)
 end
 
 private
